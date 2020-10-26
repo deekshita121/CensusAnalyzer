@@ -15,6 +15,8 @@ public class CensusAnalyserTest {
 	private static final String WRONG_CSV_FILE_TYPE = "C:\\Users\\Lenovo\\git\\CensusAnalyzer\\CensusAnalyzer\\src\\test\\resources\\_IndianStateCensusData-IndianStateCensusData.txt";
 	private static final String WRONG_DELIMITER_PATH= "C:\\Users\\Lenovo\\git\\CensusAnalyzer\\CensusAnalyzer\\src\\test\\resources\\WrongDelimiter.csv";
 	private static final String WRONG_HEADER = "C:\\Users\\Lenovo\\git\\CensusAnalyzer\\CensusAnalyzer\\src\\test\\resources\\WrongHeaderIndianStates.csv";
+	private static final String STATE_CODE_CSV_FILE = "C:\\Users\\Lenovo\\git\\CensusAnalyzer\\CensusAnalyzer\\src\\test\\resources\\StateCode.csv";
+	private static final String INCORRECT_STATE_CODE_CSV_FILE = "C:\\Users\\Lenovo\\git\\CensusAnalyzer\\CensusAnalyzer\\src\\test\\resources\\_State_Code.csv";
 
 	@Test
 	public void givenTheIndiaCensusCSVFile_WhenRead_NoOfRecordsShouldMatch() throws CensusAnalyserException {
@@ -41,6 +43,7 @@ public class CensusAnalyserTest {
 		Assert.assertEquals(ExceptionType.CENSUS_FILE_PROBLEM.toString(), exceptionMessage);
 	}
 	
+	@Test
 	public void givenWrongDelimiter_ShouldReturnCustomException() throws CensusAnalyserException {
 		String exceptionMessage = null;
 		CensusAnalyser censusAnalyser = new CensusAnalyser();
@@ -49,11 +52,29 @@ public class CensusAnalyserTest {
 
 	}
 	
+	@Test
 	public void givenWrongHeader_ShouldReturnCustomException() throws CensusAnalyserException {
 		String exceptionMessage = null;
 		CensusAnalyser censusAnalyser = new CensusAnalyser();
 		censusAnalyser.loadIndiaCensusData(WRONG_HEADER);
 		Assert.assertEquals(ExceptionType.CENSUS_FILE_PROBLEM.toString(), exceptionMessage);
+
+	}
+	
+	@Test
+	public void givenStateCodeCSVFile_WhenRead_NoOfRecordsShouldMatch() throws CensusAnalyserException {
+		CensusAnalyser censusAnalyser = new CensusAnalyser();
+		int numOfRecords = censusAnalyser.loadStateCodeData(STATE_CODE_CSV_FILE);
+		System.out.println(numOfRecords);
+		Assert.assertEquals(10, numOfRecords);
+	}
+
+	@Test
+	public void givenIncorrectStateCodeCSVFile_ShouldReturnCustomException() throws CensusAnalyserException {
+		String exceptionMessage = null;
+		CensusAnalyser censusAnalyser = new CensusAnalyser();
+		censusAnalyser.loadStateCodeData(INCORRECT_STATE_CODE_CSV_FILE);
+		Assert.assertEquals(ExceptionType.STATE_FILE_PROBLM.toString(), exceptionMessage);
 
 	}
 }
