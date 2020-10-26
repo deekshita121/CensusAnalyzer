@@ -127,17 +127,26 @@ public class CensusAnalyserTest {
 	public void givenIndianCensus_WhenSortedShouldReturn_Population() throws CensusAnalyserException {
 		CensusAnalyser censusAnalyser = new CensusAnalyser();
 		censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE, CSVBuilderType.OPEN_CSV);
-		String sortedCensusData = censusAnalyser.getStateWiseSortedCensusData();
+		String sortedCensusData = censusAnalyser.getPopulationWiseSortedCensusData(INDIA_CENSUS_CSV_FILE);
 		CSVIndiaCensus[] censusList = new Gson().fromJson(sortedCensusData, CSVIndiaCensus[].class);
-		Assert.assertEquals(censusList[0].state, "Uttar Pradesh");
+		Assert.assertEquals(censusList[censusList.length-1].state, "Uttar Pradesh");
 	}
 	
 	@Test
 	public void givenIndianCensus_WhenSortedShouldReturn_Density() throws CensusAnalyserException {
 		CensusAnalyser censusAnalyser = new CensusAnalyser();
 		censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE, CSVBuilderType.OPEN_CSV);
-		String sortedCensusData = censusAnalyser.getStateWiseSortedCensusData();
+		String sortedCensusData = censusAnalyser.getDensityWiseSortedCensusData(INDIA_CENSUS_CSV_FILE);
 		CSVIndiaCensus[] censusList = new Gson().fromJson(sortedCensusData, CSVIndiaCensus[].class);
-		Assert.assertEquals(censusList[0].state, "Bihar");
+		Assert.assertEquals(censusList[censusList.length-1].state, "Bihar");
+	}
+	
+	@Test
+	public void givenIndianCensus_WhenSortedShouldReturn_Area() throws CensusAnalyserException {
+		CensusAnalyser censusAnalyser = new CensusAnalyser();
+		censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE, CSVBuilderType.OPEN_CSV);
+		String sortedCensusData = censusAnalyser.getAreaWiseSortedCensusData(INDIA_CENSUS_CSV_FILE);
+		CSVIndiaCensus[] censusList = new Gson().fromJson(sortedCensusData, CSVIndiaCensus[].class);
+		Assert.assertEquals(censusList[censusList.length-1].state, "Madhya Pradesh");
 	}
 }

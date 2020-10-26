@@ -126,8 +126,8 @@ public class CensusAnalyser {
 				CSVIndiaCensus census1 = censusCSVList.get(j);
 				CSVIndiaCensus census2 = censusCSVList.get(j + 1);
 				if (censusComparator.compare(census1, census2) > 0) {
-					censusCSVList.set(j, census1);
-					censusCSVList.set(j + 1, census2);
+					censusCSVList.set(j, census2);
+					censusCSVList.set(j + 1, census1);
 				}
 			}
 		}
@@ -135,6 +135,18 @@ public class CensusAnalyser {
 
 	
 	public String getDensityWiseSortedCensusData(String csvFilePath) throws CensusAnalyserException {
+		loadIndiaCensusData(csvFilePath, CSVBuilderType.OPEN_CSV);
+		if (censusCSVList == null || censusCSVList.size() == 0) {
+			throw new CensusAnalyserException("NO_CENSUS_DATA",
+					CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+		}
+		Comparator<CSVIndiaCensus> censusComparator = Comparator.comparing(census -> census.densityPerSqKm);
+		this.sort(censusComparator);
+		String sortedStateCensusJson = new Gson().toJson(this.censusCSVList);
+		return sortedStateCensusJson;
+	}
+
+	public String getAreaWiseSortedCensusData(String csvFilePath) throws CensusAnalyserException {
 		loadIndiaCensusData(csvFilePath, CSVBuilderType.OPEN_CSV);
 		if (censusCSVList == null || censusCSVList.size() == 0) {
 			throw new CensusAnalyserException("NO_CENSUS_DATA",
