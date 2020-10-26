@@ -1,5 +1,7 @@
 package com.capgemini.censusanalyzer;
 
+import java.util.List;
+
 import com.opencsv.bean.CsvBindByName;
 
 public class StateCode {
@@ -17,4 +19,6 @@ public class StateCode {
 	public String toString() {
 		return "States [SerialNo=" + serialNo + ", State Name=" + stateName + ", State Code=" + stateCode + "]";
 	}
+	
+
 }

@@ -15,10 +15,11 @@ import com.opencsv.bean.CsvToBeanBuilder;
 
 public class CensusAnalyser {
 
-	public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
+	public int loadIndiaCensusData(String csvFilePath, CSVBuilderType type) throws CensusAnalyserException {
 		try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));) {
-			ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
+			ICSVBuilder csvBuilder = (type==CSVBuilderType.OPEN_CSV)?CSVBuilderFactory.createBuilderOpen(): CSVBuilderFactory.createBuilderCommons();
 			Iterator<CSVIndiaCensus> censusCSVIterator = csvBuilder.getCSVFileIterator(reader, CSVIndiaCensus.class);
+					//csvBuilder.getCSVFileIterator(reader, CSVIndiaCensus.class);
 			return this.getCount(censusCSVIterator);
 		} catch (IOException | RuntimeException e) {
 			throw new CensusAnalyserException(e.getMessage(),
@@ -28,11 +29,11 @@ public class CensusAnalyser {
 		}
 	}
 
-	public int loadStateCodeData(String StateCodeCsvPath) throws CensusAnalyserException {
+	public int loadStateCodeData(String StateCodeCsvPath, CSVBuilderType type) throws CensusAnalyserException {
 
 		try (Reader reader = Files.newBufferedReader(Paths.get(StateCodeCsvPath));) {
-			ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-			Iterator<StateCode> censusCSVIterator = csvBuilder.getCSVFileIterator(reader, StateCode.class);
+			ICSVBuilder csvBuilder = (type==CSVBuilderType.OPEN_CSV)?CSVBuilderFactory.createBuilderOpen(): CSVBuilderFactory.createBuilderCommons();
+            Iterator<StateCode> censusCSVIterator = csvBuilder.getCSVFileIterator(reader, StateCode.class);
 			return getCount(censusCSVIterator);
 		} catch (IOException | RuntimeException e) {
 			throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.STATE_FILE_PROBLM);
