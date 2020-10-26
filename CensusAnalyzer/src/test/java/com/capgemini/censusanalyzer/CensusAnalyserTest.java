@@ -18,6 +18,8 @@ public class CensusAnalyserTest {
 	private static final String STATE_CODE_CSV_FILE = "C:\\Users\\Lenovo\\git\\CensusAnalyzer\\CensusAnalyzer\\src\\test\\resources\\StateCode.csv";
 	private static final String INCORRECT_STATE_CODE_CSV_FILE = "C:\\Users\\Lenovo\\git\\CensusAnalyzer\\CensusAnalyzer\\src\\test\\resources\\_State_Code.csv";
 	private static final String WRONG_CSV_FILE_TYPE_STATE_CODE = "C:\\Users\\Lenovo\\git\\CensusAnalyzer\\CensusAnalyzer\\src\\test\\resources\\State_Code.txt";
+	private static final String WRONG_DELIMITER_PATH_STATE_CODE = "C:\\Users\\Lenovo\\git\\CensusAnalyzer\\CensusAnalyzer\\src\\test\\resources\\WrongDelimiterState.csv";
+	private static final String WRONG_HEADER_STATE_CODE = "C:\\Users\\Lenovo\\git\\CensusAnalyzer\\CensusAnalyzer\\src\\test\\resources\\WrongHeaderStateCode.csv";
 
 	@Test
 	public void givenTheIndiaCensusCSVFile_WhenRead_NoOfRecordsShouldMatch() throws CensusAnalyserException {
@@ -84,5 +86,21 @@ public class CensusAnalyserTest {
 		CensusAnalyser censusAnalyser = new CensusAnalyser();
 		censusAnalyser.loadStateCodeData(WRONG_CSV_FILE_TYPE_STATE_CODE);
 		Assert.assertEquals(ExceptionType.CENSUS_FILE_PROBLEM.toString(), exceptionMessage);
+	}
+	
+	@Test
+	public void givenWrongDelimiterOfStateCode_ShouldReturnCustomException() throws CensusAnalyserException {
+		String exceptionMessage = null;
+		CensusAnalyser censusAnalyser = new CensusAnalyser();
+		censusAnalyser.loadStateCodeData(WRONG_DELIMITER_PATH_STATE_CODE);
+		Assert.assertEquals(ExceptionType.STATE_FILE_PROBLM.toString(), exceptionMessage);
+	}
+	
+	@Test
+	public void givenWrongHeaderOfStateCode_ShouldReturnCustomException() throws CensusAnalyserException {
+		String exceptionMessage = null;
+		CensusAnalyser censusAnalyser = new CensusAnalyser();
+		censusAnalyser.loadIndiaCensusData(WRONG_HEADER_STATE_CODE);
+		Assert.assertEquals(ExceptionType.STATE_FILE_PROBLM.toString(), exceptionMessage);
 	}
 }
