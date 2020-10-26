@@ -14,6 +14,7 @@ public class CensusAnalyserTest {
 	private static final String INCORRECT_INDIA_CENSUS_CSV_FILE = "C:\\Users\\Lenovo\\git\\CensusAnalyzer\\CensusAnalyzer\\src\\test\\resources\\_IndianStateCensusData-IndianStateCensusData.csv";
 	private static final String WRONG_CSV_FILE_TYPE = "C:\\Users\\Lenovo\\git\\CensusAnalyzer\\CensusAnalyzer\\src\\test\\resources\\_IndianStateCensusData-IndianStateCensusData.txt";
 	private static final String WRONG_DELIMITER_PATH= "C:\\Users\\Lenovo\\git\\CensusAnalyzer\\CensusAnalyzer\\src\\test\\resources\\WrongDelimiter.csv";
+	private static final String WRONG_HEADER = "C:\\Users\\Lenovo\\git\\CensusAnalyzer\\CensusAnalyzer\\src\\test\\resources\\WrongHeaderIndianStates.csv";
 
 	@Test
 	public void givenTheIndiaCensusCSVFile_WhenRead_NoOfRecordsShouldMatch() throws CensusAnalyserException {
@@ -44,6 +45,14 @@ public class CensusAnalyserTest {
 		String exceptionMessage = null;
 		CensusAnalyser censusAnalyser = new CensusAnalyser();
 		censusAnalyser.loadIndiaCensusData(WRONG_DELIMITER_PATH);
+		Assert.assertEquals(ExceptionType.CENSUS_FILE_PROBLEM.toString(), exceptionMessage);
+
+	}
+	
+	public void givenWrongHeader_ShouldReturnCustomException() throws CensusAnalyserException {
+		String exceptionMessage = null;
+		CensusAnalyser censusAnalyser = new CensusAnalyser();
+		censusAnalyser.loadIndiaCensusData(WRONG_HEADER);
 		Assert.assertEquals(ExceptionType.CENSUS_FILE_PROBLEM.toString(), exceptionMessage);
 
 	}
