@@ -5,6 +5,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.StreamSupport;
 
 import com.capgemini.csvbuilder.BuilderException;
@@ -17,10 +18,12 @@ public class CensusAnalyser {
 
 	public int loadIndiaCensusData(String csvFilePath, CSVBuilderType type) throws CensusAnalyserException {
 		try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));) {
-			ICSVBuilder csvBuilder = (type==CSVBuilderType.OPEN_CSV)?CSVBuilderFactory.createBuilderOpen(): CSVBuilderFactory.createBuilderCommons();
+			ICSVBuilder csvBuilder = (type==CSVBuilderType.OPEN_CSV)?
+					CSVBuilderFactory.createBuilderOpen(): CSVBuilderFactory.createBuilderCommons();
 			Iterator<CSVIndiaCensus> censusCSVIterator = csvBuilder.getCSVFileIterator(reader, CSVIndiaCensus.class);
 					//csvBuilder.getCSVFileIterator(reader, CSVIndiaCensus.class);
-			return this.getCount(censusCSVIterator);
+			List<CSVIndiaCensus> censusCSVList = csvBuilder.getCSVFileList(reader, CSVIndiaCensus.class);
+			return censusCSVList.size();
 		} catch (IOException | RuntimeException e) {
 			throw new CensusAnalyserException(e.getMessage(),
 					CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
@@ -34,7 +37,8 @@ public class CensusAnalyser {
 		try (Reader reader = Files.newBufferedReader(Paths.get(StateCodeCsvPath));) {
 			ICSVBuilder csvBuilder = (type==CSVBuilderType.OPEN_CSV)?CSVBuilderFactory.createBuilderOpen(): CSVBuilderFactory.createBuilderCommons();
             Iterator<StateCode> censusCSVIterator = csvBuilder.getCSVFileIterator(reader, StateCode.class);
-			return getCount(censusCSVIterator);
+            List<StateCode> censusCSVList = csvBuilder.getCSVFileList(reader, StateCode.class);
+			return censusCSVList.size();
 		} catch (IOException | RuntimeException e) {
 			throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.STATE_FILE_PROBLM);
 		} catch (BuilderException e) {
