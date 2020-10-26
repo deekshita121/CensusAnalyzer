@@ -19,6 +19,7 @@ import com.opencsv.bean.CsvToBeanBuilder;
 public class CensusAnalyser {
 
 	List<CSVIndiaCensus> censusCSVList = null;
+	List<StateCode> stateCodeList = null;
 
 	public int loadIndiaCensusData(String csvFilePath, CSVBuilderType type) throws CensusAnalyserException {
 		try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));) {
@@ -42,8 +43,8 @@ public class CensusAnalyser {
 			ICSVBuilder csvBuilder = (type == CSVBuilderType.OPEN_CSV) ? CSVBuilderFactory.createBuilderOpen()
 					: CSVBuilderFactory.createBuilderCommons();
 			Iterator<StateCode> censusCSVIterator = csvBuilder.getCSVFileIterator(reader, StateCode.class);
-			List<StateCode> censusCSVList = csvBuilder.getCSVFileList(reader, StateCode.class);
-			return censusCSVList.size();
+		    stateCodeList = csvBuilder.getCSVFileList(reader, StateCode.class);
+			return stateCodeList.size();
 		} catch (IOException | RuntimeException e) {
 			throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.STATE_FILE_PROBLM);
 		} catch (BuilderException e) {
@@ -82,5 +83,31 @@ public class CensusAnalyser {
 
 		}
 	}
+
+	public String getStateCodeWiseSortedCensusData() throws CensusAnalyserException {
+		// TODO Auto-generated method stub
+		if (stateCodeList == null || stateCodeList.size() == 0) {
+			throw new CensusAnalyserException("NO_DATA", CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+		}
+		Comparator<StateCode> codeComparator = Comparator.comparing(census -> census.code);
+		this.sorted(stateCodeList, codeComparator);
+		String toJson = new Gson().toJson(censusCSVList);
+		return toJson;
+	}
+	private void sorted(List<StateCode> stateCodeList, Comparator<StateCode> codeComparator) {
+		for (int i = 0; i < stateCodeList.size(); i++) {
+			for (int j = 0; j < stateCodeList.size() - i - 1; j++) {
+				StateCode census1 = stateCodeList.get(j);
+				StateCode census2 = stateCodeList.get(j + 1);
+				if (codeComparator.compare(census1, census2) > 0) {
+					stateCodeList.set(j, census2);
+					stateCodeList.set(j + 1, census1);
+				}
+
+			}
+
+		}
+	}
+
 
 }
