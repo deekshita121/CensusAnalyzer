@@ -20,16 +20,21 @@ public class CensusAnalyser {
 		} catch (IOException | RuntimeException e) {
 			throw new CensusAnalyserException(e.getMessage(),
 					CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+		} catch (BuilderException e) {
+			throw new CensusAnalyserException(e.getMessage(), e.type.name());
 		}
 	}
 
 	public int loadStateCodeData(String StateCodeCsvPath) throws CensusAnalyserException {
+
 		try (Reader reader = Files.newBufferedReader(Paths.get(StateCodeCsvPath));) {
 			ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
 			Iterator<StateCode> censusCSVIterator = csvBuilder.getCSVFileIterator(reader, StateCode.class);
 			return getCount(censusCSVIterator);
 		} catch (IOException | RuntimeException e) {
 			throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.STATE_FILE_PROBLM);
+		} catch (BuilderException e) {
+			throw new CensusAnalyserException(e.getMessage(), e.type.name());
 		}
 	}
 
