@@ -43,7 +43,7 @@ public class CensusAnalyser {
 			ICSVBuilder csvBuilder = (type == CSVBuilderType.OPEN_CSV) ? CSVBuilderFactory.createBuilderOpen()
 					: CSVBuilderFactory.createBuilderCommons();
 			Iterator<StateCode> censusCSVIterator = csvBuilder.getCSVFileIterator(reader, StateCode.class);
-		    stateCodeList = csvBuilder.getCSVFileList(reader, StateCode.class);
+			stateCodeList = csvBuilder.getCSVFileList(reader, StateCode.class);
 			return stateCodeList.size();
 		} catch (IOException | RuntimeException e) {
 			throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.STATE_FILE_PROBLM);
@@ -94,6 +94,7 @@ public class CensusAnalyser {
 		String toJson = new Gson().toJson(censusCSVList);
 		return toJson;
 	}
+
 	private void sorted(List<StateCode> stateCodeList, Comparator<StateCode> codeComparator) {
 		for (int i = 0; i < stateCodeList.size(); i++) {
 			for (int j = 0; j < stateCodeList.size() - i - 1; j++) {
@@ -103,11 +104,33 @@ public class CensusAnalyser {
 					stateCodeList.set(j, census2);
 					stateCodeList.set(j + 1, census1);
 				}
-
 			}
-
 		}
 	}
 
+	public String getPopulationWiseSortedCensusData(String csvFilePath) throws CensusAnalyserException {
+		loadIndiaCensusData(csvFilePath, CSVBuilderType.OPEN_CSV);
+		if (censusCSVList == null || censusCSVList.size() == 0) {
+			throw new CensusAnalyserException("NO_CENSUS_DATA",
+					CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+		}
+		Comparator<CSVIndiaCensus> censusComparator = Comparator.comparing(census -> census.population);
+		this.sort(censusComparator);
+		String sortedStateCensusJson = new Gson().toJson(this.censusCSVList);
+		return sortedStateCensusJson;
+	}
+
+	private void sort(Comparator<CSVIndiaCensus> censusComparator) {
+		for (int i = 0; i < censusCSVList.size(); i++) {
+			for (int j = 0; j < censusCSVList.size() - i - 1; j++) {
+				CSVIndiaCensus census1 = censusCSVList.get(j);
+				CSVIndiaCensus census2 = censusCSVList.get(j + 1);
+				if (censusComparator.compare(census1, census2) > 0) {
+					censusCSVList.set(j, census2);
+					censusCSVList.set(j + 1, census1);
+				}
+			}
+		}
+	}
 
 }

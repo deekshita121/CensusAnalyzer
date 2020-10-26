@@ -7,13 +7,13 @@ import com.opencsv.bean.CsvBindByName;
 public class StateCode {
 
 	@CsvBindByName(column = "Serial.No", required =true)
-	private int serialNo;
+	public int serialNo;
 
 	@CsvBindByName(column = "State Name", required =true)
-	private String stateName;
+	public String stateName;
 
 	@CsvBindByName(column = "State Code", required =true)
-	private String code;
+	public String code;
 
 	@Override
 	public String toString() {
